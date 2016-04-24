@@ -3,16 +3,20 @@
 void klista::f_kiir(int k)
 {
 	int db = 0;
-	int *seged = poz;
+	elem *seged = poz;
 
 	while (seged->kov != poz)
-		{
-		cout<<seged->ert;
+	{
+        if (seged->ert < 10)
+            cout << " ";
+		cout << seged->ert << " ";
 		db++;
 		if (db == k)
 			{
-			cout<<endl;
-			db = 0;
+			    cout<<endl;
+			    db = 0;
 			}
-		}
+        seged = seged->kov;
+	}
+    cout << endl;
 }
