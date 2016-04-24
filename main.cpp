@@ -1,4 +1,7 @@
 #include "head.h"
+#include "klista.h"
+#include "szelveny.h"
+#include "Lista.h"
 
 void    kiir(int *p, int n)
 {
@@ -13,6 +16,8 @@ void    kiir(int *p, int n)
     cout << endl;
 }
 
+
+
 void    print(char a, int n)
 {   
     for (int i = 0; i < n; i++)
@@ -21,20 +26,18 @@ void    print(char a, int n)
 
 void    kiir_bingo()
 {
-    print('*', 21);
+    print('*', 31);
     cout << endl << "*";
-    print(' ', 7);
+    print(' ', 12);
     cout << "BINGO";
-    print(' ', 7);
+    print(' ', 12);
     cout << "*" << endl;
-    print('*', 21);
-    cout << "\n\n";
+    print('*', 31);
+    cout << "\n";
 }
 
-#define FELSO_KORLAT 80
-#define ALSO_KORLAT 30
 
-void    jatek_indit(int szam)
+void    jatek_indit(int szam, Lista *fogado)
 {
     int     rn = 2 + (rand() % 5);
     int     *tab;
@@ -45,35 +48,43 @@ void    jatek_indit(int szam)
         {
             if (!rn--)
             {
-                rn = 2 + (rand() % 5);
+                rn = 10 + (rand() % 20);
                 tab[k++] = a.get();
                 a.torol();
-                cout << "Kihuzott szam:" << "*" << tab[k - 1] << "*" << endl;
-                system("sleep 1.5");
+                cout << "Kihuzott szam: "<< tab[k - 1] << endl;
+                system("sleep 0.7");
             }
             system("clear");
             kiir_bingo();
             cout << endl << endl;
-            cout << "Maradando szamok:\n";
+            cout << "Maradando szamok:";
             cout << endl;
             a.f_kiir(10);
-            a.lep();
-            cout << "Kihuzott szamok:";
+            cout << "\nKihuzott szamok:";
             cout << endl;
             kiir(tab, k);
-            system("sleep 0.2");
+            cout << endl << endl;
+            a.lep();
+            system("sleep 0.1");
         }
+    cout << "\nJatek vege\n";
+    fogado->kiir_gy(tab, szam * 3 /4);
+}
+
+void    megrak_szel(Lista *fogadok, int szam)
+{
+    fogadok->megrak(szam);
 }
 
 int     main()
 {
     srand(time(NULL));
-    int     k = 0;
-    int     val;
     int     szam = 49; 
     int     valasz = 0;
     bool    meg = true;
-    char    aux;
+    Lista   *fogadok;
+    
+    fogadok = new Lista;
     while (meg)
     {
         system("clear");
@@ -81,17 +92,22 @@ int     main()
         cout << "1.Szelveny megrakasa\n";
         cout << "2.Jatek inditasa\n";
         cout << "3.Maximalis intervallum\n";
-        cout << "4.Kilepes\n";
+        cout << "4.Szelvenyek megvizsgalasa\n";
+        cout << "5.Kilepes\n";
 
         cin >> valasz;
         switch (valasz)
         {
             case 1:
-                //insert_ppl();
+                system("clear");
+                megrak_szel(fogadok, szam);
                 break;
             case 2:
-                jatek_indit(szam);
-                cin >> aux;
+                jatek_indit(szam, fogadok);
+                delete fogadok;
+                fogadok = new Lista;
+                cout << "Nyomd meg a SPACE+ENTER-t hogy lepj tovabb";
+                while (cin.get() == '\n');
                 break;
             case 3:
                 system("clear");
@@ -106,11 +122,17 @@ int     main()
                 }
                 break;
             case 4:
+                system("clear");
+                cout << "Szelvenyek:\n";
+                fogadok->kiir();
+                cout << "Nyomd meg a SPACE+ENTER-t hogy lepj tovabb";
+                while (cin.get() != ' ');
+                break;
+            case 5:
                 meg = false;
                 break;
             default :
                 cout << "!!!Nem letezik ilyen opcio!!!\n";
-                system("sleep 2");
                 break;
         }
     }
